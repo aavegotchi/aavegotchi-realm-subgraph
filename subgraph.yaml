@@ -1,0 +1,56 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: RealmDiamond
+    network: kovan
+    source:
+      address: "0xFAefD30Af8E86d3d8D22fa5caEFD48fAA2Fa8E21"
+      abi: RealmDiamond
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - DiamondCut
+        - OwnershipTransferred
+        - OwnershipTransferred1
+        - Approval
+        - ApprovalForAll
+        - MintParcel
+        - Transfer
+        - OwnershipTransferred2
+        - Approval1
+        - ApprovalForAll1
+        - MintParcel1
+        - Transfer1
+      abis:
+        - name: RealmDiamond
+          file: ./abis/RealmDiamond.json
+      eventHandlers:
+        - event: DiamondCut(address,bytes)
+          handler: handleDiamondCut
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred1
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: MintParcel(indexed address,indexed uint256)
+          handler: handleMintParcel
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred2
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval1
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll1
+        - event: MintParcel(indexed address,indexed uint256)
+          handler: handleMintParcel1
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer1
+      file: ./src/mapping.ts
