@@ -1,6 +1,11 @@
-type ExampleEntity @entity {
+type Parcel @entity {
   id: ID!
-  count: BigInt!
-  _init: Bytes! # address
-  _calldata: Bytes! # bytes
+  tokenId: BigInt!
+  parcelId: String!
+  owner: Bytes!
+  coordinateX: BigInt!
+  coordinateY: BigInt!
+  district: BigInt!
+  parcelHash: String!
+  boost: [BigInt!]!
 }

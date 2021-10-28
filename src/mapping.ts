@@ -1,7 +1,5 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import {
   RealmDiamond,
-  DiamondCut,
   OwnershipTransferred,
   OwnershipTransferred1,
   Approval,
@@ -12,66 +10,9 @@ import {
   Approval1,
   ApprovalForAll1,
   MintParcel1,
-  Transfer1
-} from "../generated/RealmDiamond/RealmDiamond"
-import { ExampleEntity } from "../generated/schema"
-
-export function handleDiamondCut(event: DiamondCut): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity._init = event.params._init
-  entity._calldata = event.params._calldata
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.facetAddress(...)
-  // - contract.facetAddresses(...)
-  // - contract.facetFunctionSelectors(...)
-  // - contract.supportsInterface(...)
-  // - contract.balanceOf(...)
-  // - contract.getApproved(...)
-  // - contract.isApprovedForAll(...)
-  // - contract.name(...)
-  // - contract.ownerOf(...)
-  // - contract.symbol(...)
-  // - contract.tokenByIndex(...)
-  // - contract.tokenIdsOfOwner(...)
-  // - contract.tokenURI(...)
-  // - contract.totalSupply(...)
-  // - contract.owner(...)
-  // - contract.getParcelInfo(...)
-}
+  Transfer1,
+} from "../generated/RealmDiamond/RealmDiamond";
+import { Parcel } from "../generated/schema";
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 
@@ -83,9 +24,40 @@ export function handleApproval(event: Approval): void {}
 
 export function handleApprovalForAll(event: ApprovalForAll): void {}
 
-export function handleMintParcel(event: MintParcel): void {}
+export function handleMintParcel(event: MintParcel): void {
+  let parcel = Parcel.load(event.params._tokenId.toString());
 
-export function handleTransfer(event: Transfer): void {}
+  // Entities only exist after they have been saved to the store;
+  // `null` checks allow to create entities on demand
+  if (parcel == null) {
+    parcel = new Parcel(event.params._tokenId.toString());
+  }
+
+  let contract = RealmDiamond.bind(event.address);
+  let parcelInfo = contract.try_getParcelInfo(event.params._tokenId);
+
+  if (parcelInfo.reverted) {
+  } else {
+    let parcelMetadata = parcelInfo.value;
+    parcel.parcelId = parcelMetadata.parcelId;
+    parcel.tokenId = event.params._tokenId;
+    parcel.owner = event.params._owner;
+    parcel.coordinateX = parcelMetadata.coordinateX;
+    parcel.coordinateY = parcelMetadata.coordinateY;
+    parcel.district = parcelMetadata.district;
+    parcel.parcelHash = parcelMetadata.parcelAddress;
+    parcel.boost = parcelMetadata.boost;
+  }
+
+  // Entities can be written to the store with `.save()`
+  parcel.save();
+}
+
+export function handleTransfer(event: Transfer): void {
+  let parcel = Parcel.load(event.params._tokenId.toString());
+  parcel.owner = event.params._to;
+  parcel.save();
+}
 
 export function handleOwnershipTransferred2(
   event: OwnershipTransferred2
