@@ -14,6 +14,7 @@ import {
   ResyncParcel,
 } from "../generated/RealmDiamond/RealmDiamond";
 import { Auction, Parcel } from "../generated/schema";
+import { getOrCreateUser } from "./helper";
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 
@@ -42,7 +43,11 @@ export function handleMintParcel(event: MintParcel): void {
     let parcelMetadata = parcelInfo.value;
     parcel.parcelId = parcelMetadata.parcelId;
     parcel.tokenId = event.params._tokenId;
-    parcel.owner = event.params._owner;
+    
+    parcel.owner = event.params._owner.toHexString();
+    let user = getOrCreateUser(event.params._owner);
+    user.save();
+
     parcel.coordinateX = parcelMetadata.coordinateX;
     parcel.coordinateY = parcelMetadata.coordinateY;
     parcel.district = parcelMetadata.district;
@@ -63,8 +68,11 @@ export function handleMintParcel(event: MintParcel): void {
 
 export function handleTransfer(event: Transfer): void {
   let parcel = Parcel.load(event.params._tokenId.toString());
-  parcel.owner = event.params._to;
+  parcel.owner = event.params._to.toHexString();
   parcel.save();
+
+  let user = getOrCreateUser(event.params._to);
+  user.save();
 }
 
 export function handleResyncParcel(event: ResyncParcel): void {
@@ -90,6 +98,16 @@ export function handleResyncParcel(event: ResyncParcel): void {
     parcel.fomoBoost = boostArray[1];
     parcel.alphaBoost = boostArray[2];
     parcel.kekBoost = boostArray[3];
+
+    // Update Boosts in Auction
+    let auction = Auction.load(parcel.auctionId);
+    if(auction != null) {
+      auction.fudBoost = boostArray[0];
+      auction.fomoBoost = boostArray[1];
+      auction.alphaBoost = boostArray[2];
+      auction.kekBoost = boostArray[3];
+      auction.save();
+    }
   }
 
   //update auction too

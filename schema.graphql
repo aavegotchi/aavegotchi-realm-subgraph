@@ -2,7 +2,7 @@ type Parcel @entity {
   id: ID!
   tokenId: BigInt!
   parcelId: String!
-  owner: Bytes!
+  owner: User!
   coordinateX: BigInt!
   coordinateY: BigInt!
   district: BigInt!
@@ -14,6 +14,8 @@ type Parcel @entity {
   kekBoost: BigInt!
 
   size: BigInt!
+
+  auctionId: String
 }
 
 type Auction @entity {
@@ -102,4 +104,5 @@ type User @entity {
   payouts: BigInt! # of times this user has received payout
   payoutAmount: BigInt! #cumulative amount of payouts in GHST
   wins: BigInt!
+  ownedParcels: [Parcel!]! @derivedFrom(field: "owner")
 }

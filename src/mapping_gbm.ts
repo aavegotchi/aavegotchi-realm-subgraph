@@ -200,6 +200,11 @@ export function handleAuction_Initialized(event: Auction_Initialized): void {
   auction.alphaBoost = parcel.alphaBoost;
   auction.kekBoost = parcel.kekBoost;
   auction.save();
+
+  if(parcel.auctionId == null) {
+    parcel.auctionId = auction.id;
+    parcel.save();
+  }
 }
 
 export function handleAuction_StartTimeUpdated(
