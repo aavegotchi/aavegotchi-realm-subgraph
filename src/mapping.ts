@@ -44,9 +44,9 @@ export function handleMintParcel(event: MintParcel): void {
     parcel.parcelId = parcelMetadata.parcelId;
     parcel.tokenId = event.params._tokenId;
     
-    parcel.owner = event.params._owner.toHexString();
     let user = getOrCreateUser(event.params._owner);
     user.save();
+    parcel.owner = user.id;
 
     parcel.coordinateX = parcelMetadata.coordinateX;
     parcel.coordinateY = parcelMetadata.coordinateY;
@@ -67,12 +67,12 @@ export function handleMintParcel(event: MintParcel): void {
 }
 
 export function handleTransfer(event: Transfer): void {
-  let parcel = Parcel.load(event.params._tokenId.toString());
-  parcel.owner = event.params._to.toHexString();
-  parcel.save();
-
   let user = getOrCreateUser(event.params._to);
   user.save();
+
+  let parcel = Parcel.load(event.params._tokenId.toString());
+  parcel.owner = user.id;
+  parcel.save();
 }
 
 export function handleResyncParcel(event: ResyncParcel): void {
