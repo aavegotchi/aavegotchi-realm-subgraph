@@ -36,4 +36,45 @@ dataSources:
           handler: handleMintParcel
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+        - event: ResyncParcel(uint256)
+          handler: handleResyncParcel
       file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: GBM
+    network: "matic"
+    source:
+      address: "0xa44c8e0eCAEFe668947154eE2b803Bd4e6310EFe"
+      abi: GBM
+      startBlock: 20667840
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Auction_BidPlaced
+        - Auction_BidRemoved
+        - Auction_EndTimeUpdated
+        - Auction_IncentivePaid
+        - Auction_Initialized
+        - Auction_StartTimeUpdated
+      abis:
+        - name: GBM
+          file: "./abis/GBMV2.json"
+      eventHandlers:
+        - event: Auction_BidPlaced(indexed uint256,indexed address,uint256)
+          handler: handleAuction_BidPlaced
+        - event: Auction_BidRemoved(indexed uint256,indexed address,uint256)
+          handler: handleAuction_BidRemoved
+        - event: Auction_EndTimeUpdated(indexed uint256,uint256)
+          handler: handleAuction_EndTimeUpdated
+        - event: Auction_IncentivePaid(indexed uint256,indexed address,uint256)
+          handler: handleAuction_IncentivePaid
+        - event: Auction_Initialized(indexed uint256,indexed uint256,indexed uint256,address,bytes4)
+          handler: handleAuction_Initialized
+        - event: Auction_StartTimeUpdated(indexed uint256,uint256)
+          handler: handleAuction_StartTimeUpdated
+        - event: Contract_BiddingAllowed(indexed address,bool)
+          handler: handleContract_BiddingAllowed
+        # - event: Auction_ItemClaimed(indexed uint256)
+        # handler: handleAuction_ItemClaimed
+      file: ./src/mapping_gbm.ts

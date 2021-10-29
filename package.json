@@ -5,9 +5,9 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ aavegotchi/aavegotchi-realm-matic",
-    "create-local": "graph create --node http://localhost:8020/ aavegotchi/aavegotchi-realm-matic",
-    "remove-local": "graph remove --node http://localhost:8020/ aavegotchi/aavegotchi-realm-matic",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 aavegotchi/aavegotchi-realm-matic"
+    "create-local": "graph create --node http://localhost:8020/ cinnabarhorse/aavegotchi-realm-kovan",
+    "remove-local": "graph remove --node http://localhost:8020/ cinnabarhorse/aavegotchi-realm-kovan",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cinnabarhorse/aavegotchi-realm-kovan"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.21.1",
