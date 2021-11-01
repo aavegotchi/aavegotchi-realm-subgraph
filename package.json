@@ -1,10 +1,10 @@
 {
-  "name": "aavegotchi-realm-kovan",
+  "name": "aavegotchi-realm-subgraph",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ aavegotchi/aavegotchi-realm-matic",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ aavegotchi/aavegotchi-realm-baazaar",
     "create-local": "graph create --node http://localhost:8020/ cinnabarhorse/aavegotchi-realm-kovan",
     "remove-local": "graph remove --node http://localhost:8020/ cinnabarhorse/aavegotchi-realm-kovan",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cinnabarhorse/aavegotchi-realm-kovan"

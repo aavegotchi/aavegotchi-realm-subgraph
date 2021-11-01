@@ -16,6 +16,8 @@ type Parcel @entity {
   size: BigInt!
 
   auctionId: String
+  timesTraded: BigInt!
+  historicalPrices: [BigInt!]
 }
 
 type Auction @entity {
@@ -105,4 +107,20 @@ type User @entity {
   payoutAmount: BigInt! #cumulative amount of payouts in GHST
   wins: BigInt!
   ownedParcels: [Parcel!]! @derivedFrom(field: "owner")
+}
+
+#Baazaar
+type ERC721Listing @entity {
+  id: ID!
+  category: BigInt! # 0 = Closed Portal, 1 = VRF Pending, 2 = Open Portal, 3 = Aavegotchi
+  erc721TokenAddress: Bytes! # The token address of the NFT
+  tokenId: BigInt! # The token ID of the NFT
+  seller: Bytes! # The creator of the listing
+  buyer: Bytes
+  timeCreated: BigInt! # Time at which listed was created
+  timePurchased: BigInt # Time when the listing was purchased
+  cancelled: Boolean # If the listing is cancelled
+  priceInWei: BigInt! # How much the listing is (in GHST)
+  parcel: Parcel # If the listing is for a gotchi, this will be populated
+  blockCreated: BigInt!
 }
