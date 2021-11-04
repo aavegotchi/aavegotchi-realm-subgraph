@@ -199,9 +199,10 @@ export function handleAuction_Initialized(event: Auction_Initialized): void {
   auction.fomoBoost = parcel.fomoBoost;
   auction.alphaBoost = parcel.alphaBoost;
   auction.kekBoost = parcel.kekBoost;
+  auction.district = parcel.district;
   auction.save();
 
-  if(parcel.auctionId == null) {
+  if (parcel.auctionId == null) {
     parcel.auctionId = auction.id;
     parcel.save();
   }

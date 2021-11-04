@@ -51,6 +51,7 @@ type Auction @entity {
   fomoBoost: BigInt!
   alphaBoost: BigInt!
   kekBoost: BigInt!
+  district: BigInt!
 }
 
 type Bid @entity {
